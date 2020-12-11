@@ -3,17 +3,17 @@ package platform;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import platform.HTML.HtmlHandler;
 import platform.JSON.JsonHandler;
+import platform.JSON.JsonObject;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 
 @SpringBootApplication
 @RestController
@@ -27,14 +27,24 @@ public class CodeSharingPlatform {
 
     @GetMapping(path = "/code")
     public String getHtml() {
-        HtmlHandler htmlHandler = new HtmlHandler(SharedCodeReader.readSharedString(path));
+        HtmlHandler htmlHandler = new HtmlHandler(CustomFileReader.readFileToString(path));
         return htmlHandler.wrapToHtml();
     }
 
     @GetMapping(path = "/api/code")
     public String getJson() {
-        JsonHandler jsonHandler = new JsonHandler(SharedCodeReader.readSharedString(path));
+        JsonHandler jsonHandler = new JsonHandler(CustomFileReader.readFileToString(path));
         return jsonHandler.wrapToJson();
+    }
+
+    @PostMapping(path = "/api/code/new", consumes = "application/json")
+    public String postJson(@RequestBody JsonObject jsonObject) {
+        try (FileWriter fileWriter = new FileWriter(String.valueOf(path), true)) {
+            fileWriter.write(jsonObject.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "string";
     }
 
 }

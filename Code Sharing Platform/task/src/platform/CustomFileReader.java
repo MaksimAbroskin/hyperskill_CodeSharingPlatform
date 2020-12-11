@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class SharedCodeReader {
-    static String readSharedString(Path path) {
+public class CustomFileReader {
+    public static String readFileToString(Path path) {
         String sourceCode = "";
         try {
             sourceCode = Files.readString(path);

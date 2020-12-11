@@ -6,27 +6,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import platform.HTML.HtmlHandler;
+import platform.JSON.JsonHandler;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 
 @SpringBootApplication
 @RestController
 public class CodeSharingPlatform {
-    String htmlStr = "<html>\n" +
-            "<head>\n" +
-            "    <title>Code</title>\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "    <pre>\n" +
-            "public static void main(String[] args) {\n" +
-            "    SpringApplication.run(CodeSharingPlatform.class, args);\n" +
-            "}</pre>\n" +
-            "</body>\n" +
-            "</html>";
-
-    String jsonStr = "{\n" +
-            "    \"code\": \"public static void main(String[] args) {\\n    SpringApplication.run(CodeSharingPlatform.class, args);\\n}\"\n" +
-            "}";
+    Path path = Path.of(System.getProperty("user.dir") + File.separator + "Code Sharing Platform" + File.separator +
+            "task" + File.separator + "src" + File.separator + "platform" + File.separator + "SharingCode.java");
 
     public static void main(String[] args) {
         SpringApplication.run(CodeSharingPlatform.class, args);
@@ -34,12 +27,14 @@ public class CodeSharingPlatform {
 
     @GetMapping(path = "/code")
     public String getHtml() {
-        return htmlStr;
+        HtmlHandler htmlHandler = new HtmlHandler(SharedCodeReader.readSharedString(path));
+        return htmlHandler.wrapToHtml();
     }
 
     @GetMapping(path = "/api/code")
     public String getJson() {
-        return jsonStr;
+        JsonHandler jsonHandler = new JsonHandler(SharedCodeReader.readSharedString(path));
+        return jsonHandler.wrapToJson();
     }
 
 }

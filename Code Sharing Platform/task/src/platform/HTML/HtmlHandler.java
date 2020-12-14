@@ -1,22 +1,24 @@
 package platform.HTML;
 
-public class HtmlHandler {
-    String in;
-    String prefix = "<html>\n" +
-            "<head>\n" +
-            "    <title>Code</title>\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "    <pre>\n";
-    String postfix = "\n</pre>\n" +
-            "</body>\n" +
-            "</html>";
+import platform.fileHandler.FileHandler;
 
-    public HtmlHandler(String in) {
-        this.in = in;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+
+import static platform.fileHandler.FileHandler.printFormattedDateAndTime;
+
+public class HtmlHandler {
+    final static String textForReplace = "EXTERNAL_CODE";
+    final static String timeForReplace = "TIME_OF_CHANGE";
+    String code;
+    String html;
+
+    public HtmlHandler(Path pathToHtmlTemplate, Path pathToSharingCode) {
+        this.html = FileHandler.readFileToString(pathToHtmlTemplate);
+        this.code = FileHandler.readFileToString(pathToSharingCode);
     }
 
-    public String wrapToHtml() {
-        return prefix + in + postfix;
+    public String wrapCodeToHtml(LocalDateTime localDateTime) {
+        return html.replace(textForReplace, code).replace(timeForReplace, printFormattedDateAndTime(localDateTime));
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import platform.HTML.HtmlHandler;
 import platform.JSON.JsonHandler;
 import platform.JSON.JsonObject;
+import platform.fileHandler.FileHandler;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -18,33 +19,40 @@ import java.nio.file.Path;
 @SpringBootApplication
 @RestController
 public class CodeSharingPlatform {
-    Path path = Path.of(System.getProperty("user.dir") + File.separator + "Code Sharing Platform" + File.separator +
-            "task" + File.separator + "src" + File.separator + "platform" + File.separator + "SharingCode.java");
+    static FileHandler fileHandler = new FileHandler();
 
     public static void main(String[] args) {
+        fileHandler = new FileHandler();
         SpringApplication.run(CodeSharingPlatform.class, args);
     }
 
     @GetMapping(path = "/code")
     public String getHtml() {
-        HtmlHandler htmlHandler = new HtmlHandler(CustomFileReader.readFileToString(path));
-        return htmlHandler.wrapToHtml();
+        HtmlHandler htmlHandler = new HtmlHandler(PathConstants.CODE_HTML_TEMPLATE_PATH, PathConstants.TO_SHARING_CODE_PATH);
+        return htmlHandler.wrapCodeToHtml(fileHandler.getLastChangeTime());
+    }
+
+    @GetMapping(path = "/code/new")
+    public String getNewHtml() {
+        HtmlHandler htmlHandler = new HtmlHandler(PathConstants.CODE_NEW_HTML_TEMPLATE_PATH, PathConstants.TO_SHARING_CODE_PATH);
+        return htmlHandler.wrapCodeToHtml(fileHandler.getLastChangeTime());
     }
 
     @GetMapping(path = "/api/code")
     public String getJson() {
-        JsonHandler jsonHandler = new JsonHandler(CustomFileReader.readFileToString(path));
-        return jsonHandler.wrapToJson();
+        JsonHandler jsonHandler = new JsonHandler(FileHandler.readFileToString(PathConstants.TO_SHARING_CODE_PATH));
+        return jsonHandler.wrapCodeToJson(fileHandler.getLastChangeTime());
     }
 
     @PostMapping(path = "/api/code/new", consumes = "application/json")
     public String postJson(@RequestBody JsonObject jsonObject) {
-        try (FileWriter fileWriter = new FileWriter(String.valueOf(path), true)) {
-            fileWriter.write(jsonObject.toString());
+        try (FileWriter fileWriter = new FileWriter(String.valueOf(PathConstants.TO_SHARING_CODE_PATH), false)) {
+            fileWriter.write(jsonObject.getCode());
+            fileHandler.setLastChangeTime();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "string";
+        return "{}";
     }
 
 }

@@ -12,6 +12,14 @@ public class JsonObject {
         this.date = date;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
     @Override
     public String toString() {
         return "JsonObject{" +

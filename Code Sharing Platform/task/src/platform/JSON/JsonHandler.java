@@ -1,6 +1,8 @@
 package platform.JSON;
 
-import platform.UserFormatting;
+import java.time.LocalDateTime;
+
+import static platform.fileHandler.FileHandler.printFormattedDateAndTime;
 
 public class JsonHandler {
     String template = "{\n" +
@@ -13,7 +15,7 @@ public class JsonHandler {
         this.in = in;
     }
 
-    public String wrapToJson() {
-        return template.replace("#CODE#", in).replace("#DATE#", UserFormatting.printFormattedDateAndTime());
+    public String wrapCodeToJson(LocalDateTime localDateTime) {
+        return template.replace("#CODE#", in).replace("#DATE#", printFormattedDateAndTime(localDateTime));
     }
 }

@@ -1,24 +1,24 @@
 package platform.HTML;
 
-import platform.CustomFileReader;
-import platform.UserFormatting;
+import platform.fileHandler.FileHandler;
 
-import java.io.File;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+
+import static platform.fileHandler.FileHandler.printFormattedDateAndTime;
 
 public class HtmlHandler {
     final static String textForReplace = "EXTERNAL_CODE";
     final static String timeForReplace = "TIME_OF_CHANGE";
-    Path path = Path.of(System.getProperty("user.dir") + File.separator + "file.html");
     String code;
     String html;
 
-    public HtmlHandler(String in) {
-        this.code = in;
+    public HtmlHandler(Path pathToHtmlTemplate, Path pathToSharingCode) {
+        this.html = FileHandler.readFileToString(pathToHtmlTemplate);
+        this.code = FileHandler.readFileToString(pathToSharingCode);
     }
 
-    public String wrapToHtml() {
-        html = CustomFileReader.readFileToString(path);
-        return html.replace(textForReplace, code).replace(timeForReplace, UserFormatting.printFormattedDateAndTime());
+    public String wrapCodeToHtml(LocalDateTime localDateTime) {
+        return html.replace(textForReplace, code).replace(timeForReplace, printFormattedDateAndTime(localDateTime));
     }
 }

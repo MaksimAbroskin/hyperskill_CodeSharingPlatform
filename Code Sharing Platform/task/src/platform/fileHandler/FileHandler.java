@@ -7,12 +7,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class FileHandler {
-    LocalDateTime lastChangeTime;
-
-    public FileHandler() {
-        this.lastChangeTime = LocalDateTime.now();
-    }
-
     public static String readFileToString(Path path) {
         String sourceCode = "";
         try {
@@ -28,13 +22,4 @@ public class FileHandler {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMATTER);
         return localDateTime.format(formatter);
     }
-
-    public LocalDateTime getLastChangeTime() {
-        return lastChangeTime;
-    }
-
-    public void setLastChangeTime() {
-        this.lastChangeTime = LocalDateTime.now();
-    }
-
 }

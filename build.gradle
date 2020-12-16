@@ -16,6 +16,7 @@ subprojects {
     }
 
     dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-freemarker'
         testCompile group: 'junit', name: 'junit', version: '4.12'
         testCompile 'com.google.code.gson:gson:2.8.5'
         testCompile 'org.apache.httpcomponents:httpclient:4.5.9'

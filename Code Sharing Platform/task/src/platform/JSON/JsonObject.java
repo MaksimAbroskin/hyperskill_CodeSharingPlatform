@@ -22,9 +22,9 @@ public class JsonObject {
 
     @Override
     public String toString() {
-        return "JsonObject{" +
-                "code='" + code + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+        return "{\n" +
+                "\t\"code\": \"" + code + "\",\n" +
+                "\t\"date\": \"" + date + "\"\n" +
+                "}";
     }
 }

@@ -18,9 +18,18 @@ public class DatabaseSharedCode {
         }
     }
 
-    public void addNote(JsonObject jsonObject) {
+    public String addNote(JsonObject jsonObject) {
         jsonObject.setDate(FileHandler.printFormattedDateAndTime(LocalDateTime.now()));
         database.add(jsonObject);
+        return "{ \"id\" : \"" + (database.indexOf(jsonObject) + 1) + "\" }";
+    }
+
+    public int getSize() {
+        return database.size();
+    }
+
+    public int indexOf(JsonObject object) {
+        return database.indexOf(object);
     }
 
 }

@@ -5,43 +5,36 @@ import platform.JSON.JsonObject;
 import platform.fileHandler.FileHandler;
 
 import java.nio.file.Path;
-import java.time.LocalDateTime;
-
-import static platform.fileHandler.FileHandler.printFormattedDateAndTime;
 
 public class HtmlHandler {
-    final static String textForReplace = "EXTERNAL_CODE";
-    final static String timeForReplace = "TIME_OF_CHANGE";
-    String code;
-    String html;
-//    DatabaseSharedCode database = new DatabaseSharedCode();
+    final static String CODE = "#SHARED_CODE#";
+    final static String TIME_OF_CHANGE = "#TIME_OF_CHANGE#";
+    final static String LATEST = "#LATEST#";
 
-    public HtmlHandler(Path pathToHtmlTemplate) {
-        this.html = FileHandler.readFileToString(pathToHtmlTemplate);
-        this.code = "";
-    }
-
-    public HtmlHandler(Path pathToHtmlTemplate, Path pathToSharingCode) {
-        this.html = FileHandler.readFileToString(pathToHtmlTemplate);
-        this.code = FileHandler.readFileToString(pathToSharingCode);
-    }
-
-    public String wrapCodeToHtml(LocalDateTime localDateTime) {
-
-        return html.replace(textForReplace, code).replace(timeForReplace, printFormattedDateAndTime(localDateTime));
-    }
-
-    public String wrapCodeToHtml(int number, DatabaseSharedCode database) {
+    public static String responseTo_getCodeNumber(Path pathToTemplate, DatabaseSharedCode database, int number) {
         JsonObject note = database.getNoteByNumber(number);
-//        System.out.println("note = " + note.toString());
-//        System.out.println("database = ");
-//        for (int i = 0; i < database.database.size(); i++) {
-//            System.out.println(database.getNoteByNumber(i));
-//        }
-//        System.out.println("html = " + html);
+        String template = FileHandler.readFileToString(pathToTemplate);
         if (note != null) {
-            return html.replace(textForReplace, note.getCode()).replace(timeForReplace, note.getDate());
+            return template.replace(CODE, note.getCode()).replace(TIME_OF_CHANGE, note.getDate());
         }
-        return html.replace(textForReplace, "Incorrect index of note").replace(timeForReplace, FileHandler.printFormattedDateAndTime(LocalDateTime.now()));
+        return template;
     }
+
+    public static String responseTo_getCodeNew(Path pathToTemplate) {
+        return FileHandler.readFileToString(pathToTemplate);
+    }
+
+    public static String responseTo_getCodeLatest(Path pathToTemplate, Path pathToInnerTemplate, DatabaseSharedCode database) {
+        String template = FileHandler.readFileToString(pathToTemplate);
+        String innerTemplate = FileHandler.readFileToString(pathToInnerTemplate);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = database.getSize() - 1; i > database.getSize() - 11; i--) {
+            if (i < 0) break;
+            stringBuilder.append(innerTemplate.replace(CODE, database.getNoteByNumber(i).getCode()).replace(TIME_OF_CHANGE, database.getNoteByNumber(i).getDate()));
+        }
+
+        return template.replace(LATEST, stringBuilder);
+    }
+
 }

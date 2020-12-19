@@ -1,8 +1,22 @@
 package platform.JSON;
 
+import javax.persistence.*;
+
+@Entity(name="jsonObject")
 public class JsonObject {
-    String code;
-    String date;
+
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    private Long id;
+
+    @Column
+    private String code;
+    @Column
+    private String date;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public void setCode(String code) {
         this.code = code;
@@ -10,6 +24,10 @@ public class JsonObject {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getCode() {
@@ -23,6 +41,7 @@ public class JsonObject {
     @Override
     public String toString() {
         return "{\n" +
+//                "\t\"id\": \"" + id + "\",\n" +
                 "\t\"code\": \"" + code + "\",\n" +
                 "\t\"date\": \"" + date + "\"\n" +
                 "}";

@@ -20,6 +20,14 @@ public class HtmlHandler {
         return template;
     }
 
+    public static String wrapJsonObjectToHtml(Path pathToTemplate, JsonObject jsonObject) {
+        String template = FileHandler.readFileToString(pathToTemplate);
+        if (jsonObject != null) {
+            return template.replace(CODE, jsonObject.getCode()).replace(TIME_OF_CHANGE, jsonObject.getDate());
+        }
+        return template;
+    }
+
     public static String responseTo_getCodeNew(Path pathToTemplate) {
         return FileHandler.readFileToString(pathToTemplate);
     }

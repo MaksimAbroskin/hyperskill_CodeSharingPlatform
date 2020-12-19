@@ -17,7 +17,6 @@ import static platform.PathConstants.*;
 @RestController
 @EnableJpaRepositories(basePackageClasses= {CodeRepository.class})
 public class CodeSharingPlatform {
-    static DatabaseSharedCode database = new DatabaseSharedCode();
 
     @Autowired
     CodeService codeService;

@@ -28,6 +28,16 @@ public class HtmlHandler {
         return template;
     }
 
+    public static String wrapJsonObjectToHtml(Path pathToTemplate, Path pathToInnerTemplate, JsonObject[] jsonObjects) {
+        String template = FileHandler.readFileToString(pathToTemplate);
+        String innerTemplate = FileHandler.readFileToString(pathToInnerTemplate);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (JsonObject jsonObject : jsonObjects) {
+            stringBuilder.append(innerTemplate.replace(CODE, jsonObject.getCode()).replace(TIME_OF_CHANGE, jsonObject.getDate()));
+        }
+        return template.replace(LATEST, stringBuilder);
+    }
+
     public static String responseTo_getCodeNew(Path pathToTemplate) {
         return FileHandler.readFileToString(pathToTemplate);
     }

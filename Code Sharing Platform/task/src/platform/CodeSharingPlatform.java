@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.bind.annotation.*;
 import platform.HTML.HtmlHandler;
-import platform.JSON.JsonHandler;
 import platform.JSON.JsonObject;
 import platform.fileHandler.FileHandler;
 
@@ -30,7 +29,6 @@ public class CodeSharingPlatform {
     @GetMapping(path = "/code/{number}")
     public String getCodeByNumber(@PathVariable Long number) {
         return HtmlHandler.wrapJsonObjectToHtml(GET_CODE_BY_NUMBER_TEMPLATE_PATH, codeService.findById(number));
-//        return HtmlHandler.responseTo_getCodeNumber(GET_CODE_BY_NUMBER_TEMPLATE_PATH, database, number - 1);
     }
 
     @GetMapping(path = "/code/new")
@@ -40,7 +38,7 @@ public class CodeSharingPlatform {
 
     @GetMapping(path = "/code/latest")
     public String getCodeLatest() {
-        return HtmlHandler.responseTo_getCodeLatest(GET_CODE_LATEST_TEMPLATE_PATH, GET_CODE_LATEST_INNER_TEMPLATE_PATH, database);
+        return HtmlHandler.wrapJsonObjectToHtml(GET_CODE_LATEST_TEMPLATE_PATH, GET_CODE_LATEST_INNER_TEMPLATE_PATH, codeService.findLatest());
     }
 
     @GetMapping(path = "/api/code/{number}")

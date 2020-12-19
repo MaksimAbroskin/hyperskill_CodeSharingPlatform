@@ -1,16 +1,22 @@
 package platform.JSON;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.jsonschema.JsonSerializableSchema;
+
 import javax.persistence.*;
 
+@JsonSerializableSchema
 @Entity(name="jsonObject")
 public class JsonObject {
 
-//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     @Id
+    @Column
     private Long id;
 
     @Column
     private String code;
+
     @Column
     private String date;
 
